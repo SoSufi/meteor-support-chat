@@ -9,7 +9,7 @@ $ meteor add ralof:support-chat
 ```
 
 This package uses the following packages:
--"templating","underscore", "mongo", "session", "tracker"
+- "templating","underscore", "mongo", "session", "tracker"
 - alanning:roles, momentjs:moment, mizzao:user-status
 
 ## Basic Usage

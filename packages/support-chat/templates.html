@@ -1,0 +1,188 @@
+<template name="supportChatClient">
+    <div class="supportChat client">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                {{#if hasChat}}
+                    {{#with channelInfo}}
+                        {{getString "headingInChatWith"}}: <b>{{supporterHandle}}</b>
+                    {{/with}}
+                {{else}}
+                    {{getString "headingRequestSupport"}}
+                {{/if}}
+            </div>
+            <div class="panel-body">
+                {{#if hasChat}}
+                    {{> supportChatClientMessages}}
+                {{else}}
+                    <div class="form-group">
+                        <label for="requestSupportName">
+                            {{getString "labelYourName"}}
+                        </label>
+                        <input type="text" class="form-control" id="requestSupportName" value="{{currentUser.username}}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="requestSupportTopic">
+                            {{getString "labelYourTopic"}}
+                        </label>
+                        <input type="text" class="form-control" id="requestSupportTopic" />
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" id="requestSupportButton">{{getString "buttonRequestSupport"}}</button>
+                    </div>
+                {{/if}}
+            </div>
+
+        </div>
+    </div>
+</template>
+
+<template name="supportChatClientMessages">
+    {{#if hasSupporter}}
+        <ul data-action="supportChatList" class="list-unstyled supportChatMessageList">
+            {{#each messages}}
+                <li class="{{listClass}}">
+                    <span class="sChatTime">[{{formattedTimestamp timestamp}}]</span>
+                    <span class="sChatFrom"> {{from}}:</span>
+                    <span class="sChatMessage"> {{message}}</span>
+                </li>
+            {{/each}}
+        </ul>
+        <div class="form-group">
+
+            <div class="input-group">
+
+                <span class="input-group-addon" id="basic-addon1">{{getString "labelYourMessage"}}</span>
+                <input type="text" class="form-control" id="supportChatMessage" />
+                <span type="button"  class="input-group-addon btn btn-primary" id="sendSupportChatMessageButton">{{getString "sendMessage"}}</span>
+            </div>
+        </div>
+
+    {{else}}
+        {{getString "waitingForSupport"}}
+    {{/if}}
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" id="closeSupportButton">{{getString "buttonCloseSupport"}}</button>
+    </div>
+
+</template>
+
+
+<!-- ************************************ ADMIN ************************* -->
+
+<template name="supportChatAdmin">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-xs-12 col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Support requests
+                    </div>
+                    <div class="panel-body">
+                        {{#if hasHandle}}
+                            <div class="supportChat admin">
+                                <ul data-action="supportChatList" class="list-unstyled supportChatMessageList">
+                                {{#each openChannels}}
+                                    <li class="isActive {{isActive}}">
+                                        <span class="sStartTime">[{{formattedTimestamp startTime}}]</span>
+                                        <span class="sChatClient"> {{clientHandle}}</span>
+                                        <span class="sChatTopic"> {{topic}}</span>
+                                        <span class="sChatSupporter">
+                                            {{#if isClosed}}
+                                                {{closedBy}}
+                                            {{else}}
+
+                                                {{supporterHandle}}
+
+                                                {{#unless hasOpenWindow}}
+                                                    <a href="#" data-action='supportChat/select'>
+
+                                                    {{#if isActive}}
+                                                        {{getString "openChat"}}
+                                                    {{else}}
+                                                        {{getString "acceptChat"}}
+                                                    {{/if}}
+                                                    </a>
+                                                {{/unless}}
+
+                                            {{/if}}
+                                        </span>
+                                    </li>
+                                {{/each}}
+                                </ul>
+                                <hr/>
+                                {{#each closedChannels}}
+                                    <li class="isActive ">
+                                        <span class="sStartTime">[{{formattedTimestamp startTime}} - {{formattedTimestamp endTime}}]</span>
+                                        <span class="sChatClient"> {{clientHandle}}</span>
+                                        <span class="sChatTopic"> {{topic}}</span>
+                            <span class="sChatSupporter">
+
+                                    {{closedBy}}
+                                <a href="#" data-action='supportChat/delete'>Delete</a>
+
+                            </span>
+                                    </li>
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <div class="form-group">
+                                <label for="requestSupportName">
+                                    {{getString "labelYourName"}}
+                                </label>
+                                <input type="text" class="form-control" id="adminSupportHandle" value="{{currentUser.username}}"/>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" data-action="supportChat/setHandle">{{getString "buttonSetHandle"}}</button>
+                            </div>
+                        {{/if}}
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-8" id="supportCatContainer">
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+</template>
+
+<template name="supportChatAdminChatWindow">
+ <div class="panel panel-primary">
+     <div class="panel-heading">
+         {{#with channelInfo}}
+             {{getString "headingInChatWith"}}: <b>{{clientHandle}}</b>
+         {{/with}}
+     </div>
+     <div class="panel-body">
+
+
+    <ul class="list-unstyled supportChatMessageList">
+        {{#each messages}}
+            <li class="{{listClass}} ">
+                <span class="sChatTime">[{{formattedTimestamp timestamp}}]</span>
+                <span class="sChatFrom"> {{from}}:</span>
+                <span class="sChatMessage"> {{message}}</span>
+            </li>
+        {{/each}}
+    </ul>
+    <div class="form-group">
+
+        <div class="input-group">
+
+            <span class="input-group-addon" id="basic-addon1">{{getString "labelYourMessage"}}</span>
+            <input type="text" class="form-control" id="supportChatMessage" />
+            <span type="button"  class="input-group-addon btn btn-primary" id="sendSupportChatMessageButton">{{getString "sendMessage"}}</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" id="closeSupportButton">{{getString "buttonCloseSupport"}}</button>
+    </div>
+     </div>
+ </div>
+</template>

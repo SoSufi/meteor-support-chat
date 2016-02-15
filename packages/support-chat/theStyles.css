@@ -1,0 +1,16 @@
+.supportChat .isActive.true{
+    color: green;
+}
+
+.sChatTime{
+    color: #999;
+    font-size: 90%;
+}
+
+.sChatFrom{
+    font-weight: bold;
+}
+.supportChatMessageList{
+    max-height: 100px;
+    overflow: auto;
+}

@@ -13,7 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
   api.use('ecmascript');
-  api.use(["templating", "underscore", "mongo", "session", "tracker", "check"]);
+  api.use(["templating", "underscore", "mongo", "session", "tracker"]);
   api.use('alanning:roles@1.2.14');
   api.use('momentjs:moment');
   api.use('mizzao:user-status@0.6.6');

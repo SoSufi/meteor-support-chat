@@ -13,9 +13,11 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
   api.use('ecmascript');
-  api.use(["templating", "underscore", "mongo", "session", "tracker"]);
+  api.use(["templating", "underscore", "mongo", "session", "tracker", "check"]);
   api.use('alanning:roles@1.2.14');
   api.use('momentjs:moment');
+  api.use('mizzao:user-status@0.6.6');
+
   //api.use(["iron:router@1.0.7"], 'client', {weak: false, unordered: false});
 
   api.addFiles('support-chat.js');
@@ -23,7 +25,7 @@ Package.onUse(function(api) {
   api.addFiles('theStyles.css', 'client');
   api.addFiles('clientstuff.js', 'client');
   api.addFiles('serverstuff.js', 'server');
-  api.export(['SupportChatMessages', 'SupportChatChannels']);
+  api.export(['SupportChatMessages', 'SupportChatChannels', "SupportChat"]);
 });
 
 Package.onTest(function(api) {

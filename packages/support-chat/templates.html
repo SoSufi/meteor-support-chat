@@ -11,25 +11,43 @@
                 {{/if}}
             </div>
             <div class="panel-body">
-                {{#if hasChat}}
-                    {{> supportChatClientMessages}}
+                {{#unless supportersOnline}}
+
+                    <div class="supporterIsNotOnline alert alert-warning">{{getString "supportIsNotAvailable"}}
+                        {{#if config.emailNotifications}}
+                            <div>
+                                {{#if hasPinged}}
+                                     {{getString "pingSupporters_done"}}
+                                {{else}}
+                                    <a href="#" class="alert-link" data-action="ping/Supporter">{{getString "pingSupporters_do"}}</a>
+                                {{/if}}
+                            </div>
+                        {{/if}}
+                    </div>
                 {{else}}
-                    <div class="form-group">
-                        <label for="requestSupportName">
-                            {{getString "labelYourName"}}
-                        </label>
-                        <input type="text" class="form-control" id="requestSupportName" value="{{currentUser.username}}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="requestSupportTopic">
-                            {{getString "labelYourTopic"}}
-                        </label>
-                        <input type="text" class="form-control" id="requestSupportTopic" />
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary" id="requestSupportButton">{{getString "buttonRequestSupport"}}</button>
-                    </div>
-                {{/if}}
+                    <div class="supporterIsOnline alert alert-success">{{getString "supportIsAvailable"}}</div>
+
+                    {{#if hasChat}}
+                        {{> supportChatClientMessages}}
+                    {{else}}
+
+                        <div class="form-group">
+                            <label for="requestSupportName">
+                                {{getString "labelYourName"}}
+                            </label>
+                            <input type="text" class="form-control" id="requestSupportName" value="{{currentUser.username}}"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="requestSupportTopic">
+                                {{getString "labelYourTopic"}}
+                            </label>
+                            <input type="text" class="form-control" id="requestSupportTopic" />
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" id="requestSupportButton">{{getString "buttonRequestSupport"}}</button>
+                        </div>
+                    {{/if}}
+                {{/unless}}
             </div>
 
         </div>
@@ -70,6 +88,7 @@
 <!-- ************************************ ADMIN ************************* -->
 
 <template name="supportChatAdmin">
+    {{#if isSupporter}}
     <div class="container-fluid">
         <div class="row">
 
@@ -148,7 +167,7 @@
         </div>
     </div>
 
-
+    {{/if}}
 
 </template>
 

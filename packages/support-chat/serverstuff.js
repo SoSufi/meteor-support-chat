@@ -1,3 +1,16 @@
+Meteor.startup(function () {
+
+
+    smtp = {
+        username: 'info@telkey.com',
+        password: 'telkeym4a',
+        server: 'smtp.gmail.com',
+        port: 587
+    };
+
+    process.env.MAIL_URL = 'smtp://' + encodeURIComponent(smtp.username) + ':' + encodeURIComponent(smtp.password) + '@' + encodeURIComponent(smtp.server) + ':' + smtp.port;
+});
+
 Meteor.publish("supportChatMessages",function(channel){
     return SupportChatMessages.find({channel: channel}, {sort:{timestamp:1}, limit:20});
 });
@@ -13,9 +26,9 @@ Meteor.publish("supporterChatChannels",function(){
 });
 
 Meteor.publish("supporters",function(){
-    if(Roles.userIsInRole(this.userId, "chatSupporter")){
-        return Meteor.users.find({"roles": "chatSupporter"});
-    }
+
+        return Meteor.users.find({"roles": "chatSupporter"}, {fields: {username:1, roles:1, "status.online": true}});
+
 });
 
 
@@ -60,5 +73,24 @@ Meteor.methods({
         }
         SupportChatChannels.remove({_id: channel})
         SupportChatMessages.remove({channel: channel})
+    },
+    pingSupporters: function(){
+        var supporters = Meteor.users.find({"roles": "chatSupporter"}).fetch();
+        try{
+            supporters.forEach(function(supporter){
+                if(supporter.emails[0] && supporter.emails[0].address){
+                    Email.send({
+                        to: supporter.emails[0].address,
+                        from: SupportChat.settings.emailSender,
+                        subject:  SupportChat.settings.emailTopic,
+                        text:  SupportChat.settings.emailBody
+                    });
+                }
+            });
+        }
+        catch(e){
+            throw new Meteor.Error( 500, e.message );
+        }
+        return true;
     }
 });

@@ -1,31 +1,17 @@
 Session.setDefault("MySupportChatChannel", null);
 Session.setDefault("MySupportChatName", "");
-Session.setDefault("MySupportAdminChatName", null);
+Session.setDefault("MySupportChatHasPinged", false);
 
 
-var strings = {};
-strings['headingInChatWith'] = "In chat with";
-strings['headingRequestSupport'] = "Request support";
-strings['buttonRequestSupport'] = "Request support";
-strings['labelYourName'] = "Your name";
-strings['buttonSetHandle'] = "Set your chat handle";
-strings['labelYourTopic'] = "Your problem";
-strings['labelYourMessage'] = "Message";
-strings['sendMessage'] = "Send";
-strings['labelName'] = "Name";
-strings['err_enterYourName'] = "Please enter your name";
-strings['buttonCloseSupport'] = "Close chat";
-strings['exitMessage_client'] = "Client has left the chat";
-strings['exitMessage_supporter'] = "Supporter has left the chat";
-strings['waitingForSupport'] = "Waiting for support";
-strings['entranceMessage_supporter'] = " has entered the chat";
-strings['acceptChat'] = "Accept chat";
-strings['openChat'] = "Open chat";
+
+
 
 var activeChats = {};
 
+
+
 Template.registerHelper("getString", function(str){
-    return strings[str];
+    return SupportChat.settings.strings[str];
 });
 
 Template.registerHelper("formattedTimestamp", function(t){
@@ -45,12 +31,20 @@ Template.supportChatClient.onCreated(function(){
 });
 
 Template.supportChatClient.helpers({
-
+    supportersOnline: function(){
+        return typeof Meteor.users.findOne({"roles": "chatSupporter", "status.online": true}) != "undefined";
+    },
+    hasPinged: function(){
+        return Session.get("MySupportChatHasPinged");
+    },
     hasChat: function(){
         return Session.get("MySupportChatChannel");
     },
     channelInfo: function(){
         return SupportChatChannels.findOne({_id: Session.get("MySupportChatChannel")});
+    },
+    config: function(){
+        return SupportChat.settings;
     }
 });
 
@@ -59,7 +53,7 @@ Template.supportChatClient.events({
         var name = t.find("#requestSupportName").value;
         var topic = t.find("#requestSupportTopic").value;
         if(name.length < 2){
-            alert(strings['err_enterYourName']);
+            alert(SupportChat.settings.strings['err_enterYourName']);
             return
         }
         Session.set("MySupportChatName", name);
@@ -67,7 +61,18 @@ Template.supportChatClient.events({
         Meteor.call("createSupportRequest", data, function(e,r){
             Session.set("MySupportChatChannel", r);
         });
+    },
+    "click [data-action='ping/Supporter'] ":function(){
+        Meteor.call("pingSupporters", function(e,t){
+            if(t){
+                Session.set("MySupportChatHasPinged", true);
+            }
+            else if(e){
+                alert(e.message);
+            }
+        });
     }
+
 });
 
 
@@ -104,7 +109,7 @@ Template.supportChatClientMessages.events({
     },
     "click #closeSupportButton": function(e,t){
 
-        var data = {channel: Session.get("MySupportChatChannel"), timestamp: new Date(), exiting: true, message: strings['exitMessage_client']};
+        var data = {channel: Session.get("MySupportChatChannel"), timestamp: new Date(), exiting: true, message: SupportChat.settings.strings['exitMessage_client']};
         SupportChatMessages.insert(data);
         Meteor.call("closeSupportRequest",Session.get("MySupportChatChannel"), "client");
         Session.set("MySupportChatChannel", null);
@@ -119,7 +124,7 @@ Template.supportChatClientMessages.events({
 /******************** Admin *********************/
 
 Template.supportChatAdmin.onCreated(function(){
-
+    Session.setDefault("MySupportAdminChatName", null);
     this.autorun(function(){
         Meteor.subscribe("supporterChatChannels");
     });
@@ -132,6 +137,9 @@ Template.supportChatAdmin.onRendered(function(){
 });
 
 Template.supportChatAdmin.helpers({
+    isSupporter: function(){
+        return Roles.userIsInRole(Meteor.userId(), ["chatSupporter", "admin"]);
+    },
     hasHandle: function(){
         return  Session.get("MySupportAdminChatName");
     },
@@ -162,7 +170,7 @@ Template.supportChatAdmin.events({
     "click [data-action='supportChat/select']": function(e,t){
         var data = {supporterHandle: Session.get("MySupportAdminChatName"), startTime: new Date(), supporterId: Meteor.userId()};
         SupportChatChannels.update({_id: this._id}, {$set: data});
-        SupportChatMessages.insert({channel: this._id, timestamp: new Date(), message: Session.get("MySupportAdminChatName") + " " + strings['entranceMessage_supporter']});
+        SupportChatMessages.insert({channel: this._id, timestamp: new Date(), message: Session.get("MySupportAdminChatName") + " " + SupportChat.settings.strings['entranceMessage_supporter']});
         // open it in #supportCatContainer
         var rb = Blaze.renderWithData(Template.supportChatAdminChatWindow, {channel: this._id, isSupporter: true}, $("#supportCatContainer")[0]);
         activeChats[this._id] = rb;
@@ -199,7 +207,7 @@ Template.supportChatAdminChatWindow.events({
     },
     "click #closeSupportButton": function(e,t){
 
-        var data = {channel: t.data.channel, timestamp: new Date(), exiting: true, message: strings['exitMessage_supporter']};
+        var data = {channel: t.data.channel, timestamp: new Date(), exiting: true, message: SupportChat.settings.strings['exitMessage_supporter']};
         var btn = t.find("#closeSupportButton");
 
         btn.innerHTML =  "Closing...";

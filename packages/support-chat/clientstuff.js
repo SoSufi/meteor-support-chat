@@ -8,7 +8,22 @@ Session.setDefault("MySupportChatHasPinged", false);
 
 var activeChats = {};
 
+var clientSendMessage = function(t){
+    if(Session.get("MySupportChatChannel") == null){
+        return;
+    }
+    var msg = t.find("#supportChatMessage").value;
+    var data = {channel: Session.get("MySupportChatChannel"), from: Session.get("MySupportChatName"), timestamp: new Date(), message: msg};
+    t.find("#supportChatMessage").value = "";
+    SupportChatMessages.insert(data);
+};
 
+var adminSendMessage = function(t, channel){
+    var msg = t.find("#supportChatMessage").value;
+    var data = {channel: t.data.channel, from: Session.get("MySupportAdminChatName"), timestamp: new Date(), message: msg};
+    t.find("#supportChatMessage").value = "";
+    SupportChatMessages.insert(data);
+};
 
 Template.registerHelper("getString", function(str){
     return SupportChat.settings.strings[str];
@@ -100,12 +115,17 @@ Template.supportChatClientMessages.helpers({
 
 Template.supportChatClientMessages.events({
     "click #sendSupportChatMessageButton": function(e,t){
+        clientSendMessage(t);
+        /*
         if(Session.get("MySupportChatChannel") == null){
             return;
         }
         var msg = t.find("#supportChatMessage").value;
         var data = {channel: Session.get("MySupportChatChannel"), from: Session.get("MySupportChatName"), timestamp: new Date(), message: msg};
+        t.find("#supportChatMessage").value = "";
         SupportChatMessages.insert(data);
+        */
+
     },
     "click #closeSupportButton": function(e,t){
 
@@ -117,6 +137,10 @@ Template.supportChatClientMessages.events({
     "DOMNodeInserted [data-action='supportChatList'] ": function(e,t){
 
         e.target.scrollTop = e.target.scrollHeight;
+    },
+    "keypress #supportChatMessage": function(e,t){
+        e.charCode == 13 ? clientSendMessage(t) : null;
+
     }
 });
 
@@ -200,10 +224,13 @@ Template.supportChatAdminChatWindow.helpers({
 });
 Template.supportChatAdminChatWindow.events({
     "click #sendSupportChatMessageButton": function(e,t){
-
+        adminSendMessage(t);
+        /*
         var msg = t.find("#supportChatMessage").value;
         var data = {channel: t.data.channel, from: Session.get("MySupportAdminChatName"), timestamp: new Date(), message: msg};
+        t.find("#supportChatMessage").value = "";
         SupportChatMessages.insert(data);
+        */
     },
     "click #closeSupportButton": function(e,t){
 
@@ -225,5 +252,10 @@ Template.supportChatAdminChatWindow.events({
     },
     "DOMNodeInserted [data-action='supportChatList'] ": function(e,t){
         e.target.scrollTop = e.target.scrollHeight;
+    },
+    "keypress #supportChatMessage": function(e,t){
+        e.charCode == 13 ? adminSendMessage(t) : null;
+
     }
+
 });

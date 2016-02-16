@@ -1,15 +1,20 @@
 <head>
-  <title>suchat</title>
+  <title>Support chat</title>
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
+  <h1>Support chat example</h1>
 
-  {{> hello}}
+  {{> loginButtons}}
+
+  <!-- This template for the clients -->
+  {{> supportChatClient}}
+
+  <!-- show this one only for supporters -->
+  {{> supportChatAdmin}}
+
 </body>
 
-<template name="hello">
-    {{> loginButtons}}
-    {{> supportChatClient}}
-    {{> supportChatAdmin}}
-</template>
+
+
+

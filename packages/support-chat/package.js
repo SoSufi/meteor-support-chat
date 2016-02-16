@@ -1,6 +1,6 @@
 Package.describe({
   name: 'ralof:support-chat',
-  version: '0.0.2',
+  version: '0.0.1',
   // Brief, one-line summary of the package.
   summary: "Allows client to chat with support staff, users having the role 'chatSupporter'",
   // URL to the Git repository containing the source code for this package.

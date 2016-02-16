@@ -28,7 +28,7 @@ strings['pingSupporters_done'] = "Offline supporters alerted. There is no guaran
 SupportChat = {
     settings: {
         emailNotifications: true,
-        emailSender: "stefan.vesterlund@gmail.com",
+        emailSender: "SupportChat",
         emailTopic: "Support request",
         emailBody: "Chat request on Your Server",
         strings: strings
@@ -51,7 +51,7 @@ SupportChat = {
         }
     }
 };
-
+/*
 var schemaChannels = {
     _id: {
         type: String
@@ -110,3 +110,4 @@ var schemaMessages = {
     }
 
 };
+*/

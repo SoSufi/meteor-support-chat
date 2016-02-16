@@ -2,7 +2,7 @@ Package.describe({
   name: 'ralof:support-chat',
   version: '0.0.1',
   // Brief, one-line summary of the package.
-  summary: '',
+  summary: "Allows client to chat with support staff, users having the role 'chatSupporter'",
   // URL to the Git repository containing the source code for this package.
   git: 'https://github.com/stefanve/meteor-support-chat.git',
   // By default, Meteor will default to using README.md for documentation.
@@ -15,7 +15,7 @@ Package.onUse(function(api) {
   api.use('ecmascript');
   api.use(["templating", "underscore", "mongo", "session", "tracker"]);
   api.use('alanning:roles@1.2.14');
-  api.use('momentjs:moment');
+  api.use('momentjs:moment@2.11.2');
   api.use('mizzao:user-status@0.6.6');
 
   //api.use(["iron:router@1.0.7"], 'client', {weak: false, unordered: false});

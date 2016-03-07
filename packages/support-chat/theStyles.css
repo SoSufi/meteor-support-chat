@@ -16,25 +16,12 @@
 }
 
 .supportChat.requestAlert{
-    display: inline-block;
-    margin: 5px;
-    color: white;
 
-
-    font-size: 10pt;
-    font-weight: bold;
 }
 .supportChat .hasPendingRequests{
-    padding: 2px 5px;
-    background-color: red;
-    border-radius: 3px;
 
 }
 
 .supportChat .noPendingRequests{
 
-
-}
-.supportChat.requestAlert a{
-    color: white;
 }

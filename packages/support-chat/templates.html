@@ -209,7 +209,10 @@
 <template name="supportRequestAlert">
     <div class="supportChat requestAlert">
         {{#if requestsCount}}
-            <span class="hasPendingRequests"><a href="#" data-action="supporterChat/open">{{requestsCount}} {{getString "pendingRequestsCount"}}</a></span>
+            <button class="btn btn-danger hasPendingRequests" type="button" data-action="supporterChat/open">
+                {{getString "pendingRequestsCount"}} <span class="badge">{{requestsCount}}</span>
+            </button>
+
         {{else}}
             <span class="noPendingRequests">{{getString "noPendingRequests"}}</span>
         {{/if}}

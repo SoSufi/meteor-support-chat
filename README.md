@@ -8,9 +8,7 @@ Install using Meteor:
 $ meteor add ralof:support-chat
 ```
 
-This package uses the following packages:
-- "templating","underscore", "mongo", "session", "tracker"
-- alanning:roles, momentjs:moment, mizzao:user-status
+
 
 ## Basic Usage
 
@@ -18,6 +16,7 @@ This package is pretty rough and ugly on the inside, but it seem to work reasona
 
 Just add   `{{> supportChatClient}}` for the client and   `{{> supportChatAdmin}}` for the supporters. Give the role `chatSupporter` for those who should be able to pick up requests.
 
+New in version 0.0.2: `{{> supportRequestAlert}}` will show a red badge if there are pending support requests, clicking it will trigger data-action="supporterChat/open"
 The strings, texts, can changed with the `config`:
 
 ```javascript

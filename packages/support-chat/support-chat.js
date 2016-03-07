@@ -53,7 +53,9 @@ SupportChat = {
             'supportIsNotAvailable' : "Currently no live support available" ,
             'supportIsAvailable' : "Live support available" ,
             'pingSupporters_do' : "Alert offline supporters" ,
-            'pingSupporters_done' : "Offline supporters alerted. There is no guarantee anyone will respond"
+            'pingSupporters_done' : "Offline supporters alerted. There is no guarantee anyone will respond",
+            'pendingRequestsCount' : "Support request(s)",
+            'noPendingRequests' : ""
         }
     },
     config: function (configObj) {

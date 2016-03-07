@@ -1,5 +1,5 @@
 <template name="supportChatClient">
-    <div class="supportChat client">
+    <div class="supportChat supportChatClient">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 {{#if hasChat}}
@@ -89,7 +89,7 @@
 
 <template name="supportChatAdmin">
     {{#if isSupporter}}
-    <div class="container-fluid">
+    <div class="supportChat supportChatAdmin container-fluid">
         <div class="row">
 
             <div class="col-xs-12 col-md-4">
@@ -172,7 +172,7 @@
 </template>
 
 <template name="supportChatAdminChatWindow">
- <div class="panel panel-primary">
+ <div class=" panel panel-primary">
      <div class="panel-heading">
          {{#with channelInfo}}
              {{getString "headingInChatWith"}}: <b>{{clientHandle}}</b>
@@ -204,4 +204,14 @@
     </div>
      </div>
  </div>
+</template>
+
+<template name="supportRequestAlert">
+    <div class="supportChat requestAlert">
+        {{#if requestsCount}}
+            <span class="hasPendingRequests"><a href="#" data-action="supporterChat/open">{{requestsCount}} {{getString "pendingRequestsCount"}}</a></span>
+        {{else}}
+            <span class="noPendingRequests">{{getString "noPendingRequests"}}</span>
+        {{/if}}
+    </div>
 </template>

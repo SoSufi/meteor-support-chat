@@ -259,3 +259,15 @@ Template.supportChatAdminChatWindow.events({
     }
 
 });
+
+Template.supportRequestAlert.onCreated(function(){
+    this.autorun(function(){
+        Meteor.subscribe("supporterChatChannels");
+    });
+});
+
+Template.supportRequestAlert.helpers({
+    requestsCount: function(){
+        return SupportChatChannels.find({endTime: null, supporterId: null}).fetch().length;
+    }
+});
